@@ -5,10 +5,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: ghcr.io/dragonminded/libdragon:latest
     steps:
       - uses: actions/checkout@v4
-      - run: make
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install -g libdragon
+      - run: '[ -d .libdragon ] || libdragon init'
+      - run: libdragon make
       - uses: actions/upload-artifact@v4
         with:
           name: pudim-rom
